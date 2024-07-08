@@ -3,26 +3,32 @@ pragma solidity ^0.8.0;
 
 import "./PriceConverter.sol";
 
+
+
 contract FundMe {
     using PriceConverter for uint256;
 
-    uint256 public minimumUsd = 50 * 1e18;
+    // 867,987 -> 848,415
+    uint256 public constant MIN_USD = 50 * 1e18;
+
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
-    address public owner;
 
+    // 2558 -> 444
+    address public immutable i_owner;
+   
     constructor() {
-        owner = msg.sender;
+        i_owner = msg.sender;
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate() >= minimumUsd, "Didn't send enough");
+        require(msg.value.getConversionRate() >= MIN_USD, "Didn't send enough");
         funders.push(msg.sender);
         addressToAmountFunded[msg.sender] += msg.value;
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can perform this action");
+        require(msg.sender == i_owner, "Only owner can perform this action");
         _;
     }
 
