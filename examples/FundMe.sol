@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./PriceConverter.sol";
 
-
+error NotOwner();
 
 contract FundMe {
     using PriceConverter for uint256;
@@ -28,7 +28,11 @@ contract FundMe {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == i_owner, "Only owner can perform this action");
+        // require(msg.sender == i_owner, "Only owner can perform this action");
+        // 485 -> 213
+        if(msg.sender != i_owner){
+            revert NotOwner();
+        }
         _;
     }
 
