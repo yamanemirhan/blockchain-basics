@@ -9,10 +9,45 @@ contract FundMe {
     uint256 public minimumUsd = 50 * 1e18;
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
 
     function fund() public payable {
         require(msg.value.getConversionRate() >= minimumUsd, "Didn't send enough");
         funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] = msg.value;
+        addressToAmountFunded[msg.sender] += msg.value;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can perform this action");
+        _;
+    }
+
+    function withdraw() public onlyOwner {
+        for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++){
+            address funder = funders[funderIndex];
+            addressToAmountFunded[funder] = 0;
+        }
+        // Blank new array, reset array
+        funders = new address[](0);
+
+        // Withdraw
+        // 3 ways (transfer, send, call) to send native blockchain currency
+        // msg.sender = address, payable(msg.sender) = payable address
+        
+        // transfer
+        // payable(msg.sender).transfer(address(this).balance);
+    
+        // send
+        // bool sendSuccess = payable(msg.sender).send(address(this).balance);
+        // require(sendSuccess, "Send failed");
+
+        // call
+        (bool callSuccess, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(callSuccess, "Send failed");
+
     }
 }
