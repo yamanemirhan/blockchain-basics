@@ -9,7 +9,7 @@ contract FundMe {
     using PriceConverter for uint256;
 
     // 867,987 -> 848,415
-    uint256 public constant MIN_USD = 50 * 1e18;
+    uint256 public constant MIN_USD = 1 * 1e18;
 
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
@@ -58,6 +58,8 @@ contract FundMe {
         // call
         (bool callSuccess, ) = payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Send failed");
-
     }
+
+    receive() external payable { fund(); }
+    fallback() external payable { fund (); }
 }
