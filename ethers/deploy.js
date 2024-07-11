@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 async function main() {
   let provider = new ethers.JsonRpcProvider("HTTP://127.0.0.1:7545");
   let wallet = new ethers.Wallet(
-    "0x3672dad63ba0a5dc38493b1935fef31c89e8f563bef8cdb31b07cbf1aaed77f3",
+    "0x368930aa1c0f7bcca00daacccb141dec0cb9b74a762ca8bc1c9db7855e2a950c",
     provider
   );
 
@@ -22,19 +22,20 @@ async function main() {
     // gasPrice: 1000000000000,
     // gasLimit: 6721975
   });
-  console.log("CONTRACT: ");
-  console.log(contract);
+  // console.log("CONTRACT: ");
+  // console.log(contract);
 
-  console.log(
-    "DEPLOYMENT TRANSACTION RESPONSE (ContractTransactionResponse): "
-  );
-  console.log(contract.deploymentTransaction());
+  // console.log(
+  //   "DEPLOYMENT TRANSACTION RESPONSE (ContractTransactionResponse): "
+  // );
+  // console.log(contract.deploymentTransaction());
 
   // for transaction receipt you have to wait for a block confirmation
-  const transactionReceipt = await contract.deploymentTransaction().wait(1);
+  // const transactionReceipt = await contract.deploymentTransaction().wait(1);
+  await contract.deploymentTransaction().wait(1);
 
-  console.log("TRANSACTION RECEIPT (ContractTransactionReceipt): ");
-  console.log(transactionReceipt);
+  // console.log("TRANSACTION RECEIPT (ContractTransactionReceipt): ");
+  // console.log(transactionReceipt);
 
   // console.log("DEPLOY WITH ONLY TRANSACTION DATA: ");
   // const nonce = await wallet.getNonce();
@@ -58,6 +59,15 @@ async function main() {
   // await sentTxResponse.wait(1);
   // console.log("SENT TX RESPONSE: ");
   // console.log(sentTxResponse);
+
+  // INTERACT WITH CONTRACT
+  const currentFavoriteNumber = await contract.retrieve();
+  console.log("Current Favorite Number: ", currentFavoriteNumber.toString());
+
+  const transactionResponse = await contract.store(12); // 2^53 - 1, better pass as a string
+  const transactionReceipt = await transactionResponse.wait(1);
+  const updatedFavoriteNumber = await contract.retrieve();
+  console.log("Updated Favorite Number: ", updatedFavoriteNumber.toString());
 }
 
 main()
