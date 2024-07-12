@@ -1,0 +1,9 @@
+{
+  "name": "hardhat-simple-storage",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.6"
+  }
+}
