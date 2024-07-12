@@ -1,10 +1,13 @@
-const ethers = require("ethers");
-const fs = require("fs-extra");
-require("dotenv").config();
+// const ethers = require("ethers");
+// const fs = require("fs-extra");
+// require("dotenv").config();
+import { ethers, Contract } from "ethers";
+import * as fs from "fs-extra";
+import "dotenv/config";
 
 async function main() {
-    let provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-    let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+    let provider = new ethers.JsonRpcProvider(process.env.RPC_URL!);
+    let wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
     // const encryptedJson = fs.readFileSync("./.encryptedKey.json", "utf8");
     // let wallet = ethers.Wallet.fromEncryptedJsonSync(
     //   encryptedJson,
@@ -39,7 +42,7 @@ async function main() {
 
     // for transaction receipt you have to wait for a block confirmation
     // const transactionReceipt = await contract.deploymentTransaction().wait(1);
-    await contract.deploymentTransaction().wait(1);
+    await contract.deploymentTransaction()!.wait(1);
     const contractAddress = await contract.getAddress();
     console.log("CONTRACT ADDRESS: ", contractAddress);
 
@@ -70,12 +73,17 @@ async function main() {
     // console.log(sentTxResponse);
 
     // INTERACT WITH CONTRACT
-    const currentFavoriteNumber = await contract.retrieve();
+    // const currentFavoriteNumber = await contract.retrieve();
+    const currentFavoriteNumber = await (contract! as Contract).retrieve();
+
     console.log("Current Favorite Number: ", currentFavoriteNumber.toString());
 
-    const transactionResponse = await contract.store(12); // 2^53 - 1, better pass as a string
+    // const transactionResponse = await contract.store(12); // 2^53 - 1, better pass as a string
+    const transactionResponse = await (contract! as Contract).store(12);
+
     const transactionReceipt = await transactionResponse.wait(1);
-    const updatedFavoriteNumber = await contract.retrieve();
+    // const updatedFavoriteNumber = await contract.retrieve();
+    const updatedFavoriteNumber = await (contract! as Contract).retrieve();
     console.log("Updated Favorite Number: ", updatedFavoriteNumber.toString());
 }
 
