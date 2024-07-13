@@ -2,4 +2,8 @@
 
 ## Contract verified with hardhat-verify
 
-![deploy successful](images/image.png)
+![hardhat-verify](images/image.png)
+
+## Contract verified with hardhat
+
+![hardhat](images/image-1.png)
