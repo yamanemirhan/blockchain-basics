@@ -22,4 +22,13 @@ describe("SimpleStorage", function () {
     const currentValue = await simpleStorage.retrieve();
     expect(currentValue.toString()).to.equal(expectedValue);
   });
+
+  it("Should assign fav number to name", async function () {
+    const favNumber = "22";
+    const name = "Emirhan";
+    const transactionResponse = await simpleStorage.addPerson(name, favNumber);
+    await transactionResponse.wait(1);
+    const getFavNumber = await simpleStorage.nameToFavoriteNumber(name);
+    expect(favNumber).to.equal(getFavNumber.toString());
+  });
 });
